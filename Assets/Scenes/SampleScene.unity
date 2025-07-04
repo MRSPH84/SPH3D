@@ -877,12 +877,12 @@ MonoBehaviour:
   speed: 6
   turnSmoothTime: 0.1
   jumpForce: 3
-  cameraOffset: {x: 12, y: 9, z: 8}
+  cameraOffset: {x: 14.8, y: 10.09, z: 9.41}
   cameraSmoothSpeed: 0.1
   mouseSensitivity: 100
   maxPitch: 80
   maxHealth: 100
-  currentHealth: 0
+  currentHealth: 100
   isDead: 0
 --- !u!143 &446196722
 CharacterController:
