@@ -255,6 +255,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Freddy
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8a1e07242b7a74845a5273e68ba74626, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 6006360748730694148, guid: 8a1e07242b7a74845a5273e68ba74626, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.9999999
@@ -980,7 +984,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -1482,6 +1486,7 @@ GameObject:
   - component: {fileID: 1820212437}
   - component: {fileID: 1820212439}
   - component: {fileID: 1820212438}
+  - component: {fileID: 1820212440}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -1505,7 +1510,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -279, y: 139}
+  m_AnchoredPosition: {x: -830, y: 385}
   m_SizeDelta: {x: 1024, y: 1024}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1820212438
@@ -1546,6 +1551,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1820212436}
   m_CullTransparentMesh: 1
+--- !u!114 &1820212440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820212436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f98916ef2ee2e964eadf78b189310bc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 446196721}
+  healthBarImage: {fileID: 1820212438}
 --- !u!4 &1828334363 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -5631010103118723400, guid: 8a1e07242b7a74845a5273e68ba74626, type: 3}
