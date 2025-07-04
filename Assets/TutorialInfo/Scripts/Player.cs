@@ -48,11 +48,11 @@ public class Player : MonoBehaviour
         float vertical = Input.GetAxisRaw("Vertical");
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-        // 🔁 کنترل انیمیشن Run
-        bool isRunning = direction.magnitude >= 0.1f;
-        anim.SetBool("Run", isRunning);
+        // 🔁 انیمیشن Run وقتی حرکت داریم
+        bool isMoving = direction.magnitude >= 0.1f;
+        anim.SetBool("run", isMoving);
 
-        if (isRunning)
+        if (isMoving)
         {
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
@@ -62,15 +62,15 @@ public class Player : MonoBehaviour
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
         }
 
-        // 🪂 پریدن و انیمیشن Jump
+        // 🪂 انیمیشن Jump فقط زمان پرش
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
-            anim.SetBool("Jump", true);
+            anim.SetBool("jump", true);
         }
         else
         {
-            anim.SetBool("Jump", false);
+            anim.SetBool("jump", false);
         }
 
         velocity.y += Physics.gravity.y * Time.deltaTime;
