@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine;
 
 public class Player : MonoBehaviour
 {
@@ -15,13 +16,25 @@ public class Player : MonoBehaviour
     public Vector3 cameraOffset = new Vector3(0, 3, -5);
     public float cameraSmoothSpeed = 0.1f;
 
-    public float mouseSensitivity = 100f; // حساسیت موس
+    public float mouseSensitivity = 100f;
     private float yaw = 0f;
     private float pitch = 0f;
-    public float maxPitch = 80f; // محدودیت چرخش دوربین در محور عمودی
+    public float maxPitch = 80f;
+
+    // 🩸 سیستم جون
+    public float maxHealth = 100f;
+    public float currentHealth;
+    public bool isDead = false;
+
+    void Start()
+    {
+        currentHealth = maxHealth;
+    }
 
     void Update()
     {
+        if (isDead) return;
+
         isGrounded = controller.isGrounded;
 
         if (isGrounded && velocity.y < 0)
@@ -65,5 +78,37 @@ public class Player : MonoBehaviour
             cam.position = Vector3.Lerp(cam.position, desiredPosition, cameraSmoothSpeed);
             cam.LookAt(transform.position + Vector3.up * 1.5f);
         }
+    }
+
+    // ✅ متد جون گرفتن
+    public void Heal(float amount)
+    {
+        if (isDead) return;
+
+        currentHealth += amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+        Debug.Log("Player healed! Current health: " + currentHealth);
+    }
+
+    // 🛑 متد دمیج خوردن
+    public void TakeDamage(float amount)
+    {
+        if (isDead) return;
+
+        currentHealth -= amount;
+        Debug.Log("Player took damage! Current health: " + currentHealth);
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    // 💀 مرگ پلیر
+    private void Die()
+    {
+        isDead = true;
+        Debug.Log("Player DIED!");
+        // اینجا می‌تونی انیمیشن مرگ، ریست کردن، منوی Game Over و غیره رو بزاری
     }
 }
