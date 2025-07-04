@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
-using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     public CharacterController controller;
     public Transform cam;
+    public Animator anim;
 
     public float speed = 6f;
     public float turnSmoothTime = 0.1f;
@@ -21,7 +21,6 @@ public class Player : MonoBehaviour
     private float pitch = 0f;
     public float maxPitch = 80f;
 
-    // 🩸 سیستم جون
     public float maxHealth = 100f;
     public float currentHealth;
     public bool isDead = false;
@@ -29,6 +28,9 @@ public class Player : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
+
+        if (anim == null)
+            anim = GetComponent<Animator>();
     }
 
     void Update()
@@ -46,7 +48,11 @@ public class Player : MonoBehaviour
         float vertical = Input.GetAxisRaw("Vertical");
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-        if (direction.magnitude >= 0.1f)
+        // 🔁 کنترل انیمیشن Run
+        bool isRunning = direction.magnitude >= 0.1f;
+        anim.SetBool("Run", isRunning);
+
+        if (isRunning)
         {
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
@@ -56,9 +62,15 @@ public class Player : MonoBehaviour
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
         }
 
+        // 🪂 پریدن و انیمیشن Jump
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
+            anim.SetBool("Jump", true);
+        }
+        else
+        {
+            anim.SetBool("Jump", false);
         }
 
         velocity.y += Physics.gravity.y * Time.deltaTime;
@@ -80,21 +92,17 @@ public class Player : MonoBehaviour
         }
     }
 
-    // ✅ متد جون گرفتن
     public void Heal(float amount)
     {
         if (isDead) return;
-
         currentHealth += amount;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
         Debug.Log("Player healed! Current health: " + currentHealth);
     }
 
-    // 🛑 متد دمیج خوردن
     public void TakeDamage(float amount)
     {
         if (isDead) return;
-
         currentHealth -= amount;
         Debug.Log("Player took damage! Current health: " + currentHealth);
 
@@ -104,11 +112,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    // 💀 مرگ پلیر
     private void Die()
     {
         isDead = true;
         Debug.Log("Player DIED!");
-        // اینجا می‌تونی انیمیشن مرگ، ریست کردن، منوی Game Over و غیره رو بزاری
     }
 }

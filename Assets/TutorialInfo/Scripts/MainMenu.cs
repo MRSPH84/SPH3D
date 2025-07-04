@@ -5,7 +5,7 @@ public class MainMenu : MonoBehaviour
 {
     public void StartGame()
     {
-        SceneManager.LoadScene("YourGameplaySceneName"); // اسم صحنه اصلی رو بذار
+        SceneManager.LoadScene("SampleScene"); // اسم صحنه اصلی رو بذار
     }
 
     public void ExitGame()
