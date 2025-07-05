@@ -25,6 +25,10 @@ public class Player : MonoBehaviour
     public float currentHealth;
     public bool isDead = false;
 
+    // Cooldown بین دو ضربه برای انیمیشن hit
+    private float hitCooldown = 0.5f;
+    private float lastHitTime = -1f;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -35,7 +39,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        // اگر مرده باشه، هیچ کاری انجام نشه
         if (isDead || controller == null || !controller.enabled) return;
 
         isGrounded = controller.isGrounded;
@@ -62,13 +65,12 @@ public class Player : MonoBehaviour
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
         }
 
-        // حمله با کلیک چپ ماوس
         if (Input.GetMouseButtonDown(0) && isGrounded)
         {
             anim.SetTrigger("Attack");
+            PerformAttack();
         }
 
-        // پرش
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
@@ -113,6 +115,13 @@ public class Player : MonoBehaviour
         currentHealth -= amount;
         Debug.Log("Player took damage! Current health: " + currentHealth);
 
+        // ✅ پخش انیمیشن ضربه خوردن
+        if (anim != null && Time.time - lastHitTime > hitCooldown)
+        {
+            anim.SetTrigger("hit");
+            lastHitTime = Time.time;
+        }
+
         if (currentHealth <= 0)
         {
             Die();
@@ -124,12 +133,31 @@ public class Player : MonoBehaviour
         isDead = true;
         Debug.Log("Player DIED!");
 
-        // فعال‌سازی انیمیشن مرگ
         if (anim != null)
             anim.SetBool("isDead", true);
 
-        // غیرفعال‌سازی کنترل کاراکتر
         if (controller != null)
             controller.enabled = false;
+    }
+
+    private void PerformAttack()
+    {
+        float attackRange = 2f;
+        float attackDamage = 20f;
+
+        RaycastHit hit;
+        Vector3 rayOrigin = transform.position + Vector3.up * 1.0f;
+
+        if (Physics.Raycast(rayOrigin, transform.forward, out hit, attackRange))
+        {
+            EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(attackDamage);
+                Debug.Log("Enemy hit by player!");
+            }
+        }
+
+        Debug.DrawRay(rayOrigin, transform.forward * attackRange, Color.red, 0.5f);
     }
 }
