@@ -35,7 +35,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (isDead) return;
+        if (isDead || controller == null || !controller.enabled) return;
 
         isGrounded = controller.isGrounded;
 
@@ -48,7 +48,6 @@ public class Player : MonoBehaviour
         float vertical = Input.GetAxisRaw("Vertical");
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-        // 🔁 انیمیشن Run وقتی حرکت داریم
         bool isMoving = direction.magnitude >= 0.1f;
         anim.SetBool("run", isMoving);
 
@@ -62,7 +61,6 @@ public class Player : MonoBehaviour
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
         }
 
-        // 🪂 انیمیشن Jump فقط زمان پرش
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
@@ -79,7 +77,7 @@ public class Player : MonoBehaviour
 
     void LateUpdate()
     {
-        if (cam != null)
+        if (cam != null && !isDead)
         {
             yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
             pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
@@ -116,5 +114,10 @@ public class Player : MonoBehaviour
     {
         isDead = true;
         Debug.Log("Player DIED!");
+
+        if (anim != null)
+            anim.SetBool("isDead", true); // پخش انیمیشن مرگ
+
+        controller.enabled = false; // غیرفعال‌سازی حرکت
     }
 }
