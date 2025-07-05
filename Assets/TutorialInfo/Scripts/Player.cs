@@ -35,6 +35,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        // اگر مرده باشه، هیچ کاری انجام نشه
         if (isDead || controller == null || !controller.enabled) return;
 
         isGrounded = controller.isGrounded;
@@ -61,6 +62,13 @@ public class Player : MonoBehaviour
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
         }
 
+        // حمله با کلیک چپ ماوس
+        if (Input.GetMouseButtonDown(0) && isGrounded)
+        {
+            anim.SetTrigger("Attack");
+        }
+
+        // پرش
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
@@ -101,6 +109,7 @@ public class Player : MonoBehaviour
     public void TakeDamage(float amount)
     {
         if (isDead) return;
+
         currentHealth -= amount;
         Debug.Log("Player took damage! Current health: " + currentHealth);
 
@@ -115,9 +124,12 @@ public class Player : MonoBehaviour
         isDead = true;
         Debug.Log("Player DIED!");
 
+        // فعال‌سازی انیمیشن مرگ
         if (anim != null)
-            anim.SetBool("isDead", true); // پخش انیمیشن مرگ
+            anim.SetBool("isDead", true);
 
-        controller.enabled = false; // غیرفعال‌سازی حرکت
+        // غیرفعال‌سازی کنترل کاراکتر
+        if (controller != null)
+            controller.enabled = false;
     }
 }
