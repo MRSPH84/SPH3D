@@ -25,7 +25,11 @@ public class Player : MonoBehaviour
     public float currentHealth;
     public bool isDead = false;
 
-    // Cooldown بین دو ضربه برای انیمیشن hit
+    // 🎧 برای صدا
+    public AudioClip healClip;
+    private AudioSource audioSource;
+
+    // Cooldown برای انیمیشن hit
     private float hitCooldown = 0.5f;
     private float lastHitTime = -1f;
 
@@ -35,6 +39,8 @@ public class Player : MonoBehaviour
 
         if (anim == null)
             anim = GetComponent<Animator>();
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -103,9 +109,16 @@ public class Player : MonoBehaviour
     public void Heal(float amount)
     {
         if (isDead) return;
+
         currentHealth += amount;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
         Debug.Log("Player healed! Current health: " + currentHealth);
+
+        // 🎧 پخش صدای Heal
+        if (audioSource != null && healClip != null)
+        {
+            audioSource.PlayOneShot(healClip);
+        }
     }
 
     public void TakeDamage(float amount)
@@ -115,7 +128,6 @@ public class Player : MonoBehaviour
         currentHealth -= amount;
         Debug.Log("Player took damage! Current health: " + currentHealth);
 
-        // ✅ پخش انیمیشن ضربه خوردن
         if (anim != null && Time.time - lastHitTime > hitCooldown)
         {
             anim.SetTrigger("hit");
