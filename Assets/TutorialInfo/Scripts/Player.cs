@@ -25,11 +25,15 @@ public class Player : MonoBehaviour
     public float currentHealth;
     public bool isDead = false;
 
-    // 🎧 برای صدا
+    // 🎧 صداها
     public AudioClip healClip;
+    public AudioClip jumpClip;
+    public AudioClip attackClip;
+    public AudioClip damageClip;
+    public AudioClip gameOverClip;
+
     private AudioSource audioSource;
 
-    // Cooldown برای انیمیشن hit
     private float hitCooldown = 0.5f;
     private float lastHitTime = -1f;
 
@@ -50,9 +54,7 @@ public class Player : MonoBehaviour
         isGrounded = controller.isGrounded;
 
         if (isGrounded && velocity.y < 0)
-        {
             velocity.y = -2f;
-        }
 
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
@@ -74,6 +76,8 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && isGrounded)
         {
             anim.SetTrigger("Attack");
+            if (audioSource != null && attackClip != null)
+                audioSource.PlayOneShot(attackClip);
             PerformAttack();
         }
 
@@ -81,6 +85,8 @@ public class Player : MonoBehaviour
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
             anim.SetBool("jump", true);
+            if (audioSource != null && jumpClip != null)
+                audioSource.PlayOneShot(jumpClip);
         }
         else
         {
@@ -114,11 +120,8 @@ public class Player : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
         Debug.Log("Player healed! Current health: " + currentHealth);
 
-        // 🎧 پخش صدای Heal
         if (audioSource != null && healClip != null)
-        {
             audioSource.PlayOneShot(healClip);
-        }
     }
 
     public void TakeDamage(float amount)
@@ -127,6 +130,9 @@ public class Player : MonoBehaviour
 
         currentHealth -= amount;
         Debug.Log("Player took damage! Current health: " + currentHealth);
+
+        if (audioSource != null && damageClip != null)
+            audioSource.PlayOneShot(damageClip);
 
         if (anim != null && Time.time - lastHitTime > hitCooldown)
         {
@@ -150,6 +156,9 @@ public class Player : MonoBehaviour
 
         if (controller != null)
             controller.enabled = false;
+
+        if (audioSource != null && gameOverClip != null)
+            audioSource.PlayOneShot(gameOverClip);
     }
 
     private void PerformAttack()
@@ -173,3 +182,4 @@ public class Player : MonoBehaviour
         Debug.DrawRay(rayOrigin, transform.forward * attackRange, Color.red, 0.5f);
     }
 }
+
