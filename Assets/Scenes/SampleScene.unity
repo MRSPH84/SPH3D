@@ -1718,7 +1718,7 @@ MonoBehaviour:
   currentHealth: 100
   isDead: 0
   healClip: {fileID: 0}
-  jumpClip: {fileID: 0}
+  jumpClip: {fileID: 8300000, guid: 7264a27cf2bddd24c88fd9893302044a, type: 3}
   attackClip: {fileID: 0}
   damageClip: {fileID: 0}
   gameOverClip: {fileID: 0}
