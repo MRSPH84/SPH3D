@@ -38,8 +38,7 @@ public class EnemyAI : MonoBehaviour
         if (isDead || player == null) return;
 
         float distance = Vector3.Distance(transform.position, player.position);
-
-        if (distance > attackRange)
+        if (Mathf.Round(distance) > attackRange)
         {
             Vector3 direction = (player.position - transform.position).normalized;
             float moveStep = moveSpeed * Time.deltaTime;
@@ -65,13 +64,14 @@ public class EnemyAI : MonoBehaviour
             if (anim != null)
                 anim.SetBool("isMoving", false);
 
-            if (Time.time - lastAttackTime > attackCooldown)
+            lastAttackTime += Time.deltaTime;
+            if (lastAttackTime >= attackCooldown)
             {
                 Player playerScript = player.GetComponent<Player>();
                 if (playerScript != null)
                 {
                     playerScript.TakeDamage(damage);
-                    lastAttackTime = Time.time;
+                    lastAttackTime = 0;
 
                     if (anim != null)
                         anim.SetTrigger("attack");

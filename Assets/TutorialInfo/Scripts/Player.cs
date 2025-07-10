@@ -129,7 +129,7 @@ public class Player : MonoBehaviour
         if (isDead) return;
 
         currentHealth -= amount;
-        Debug.Log("Player took damage! Current health: " + currentHealth);
+        //Debug.Log("Player took damage! Current health: " + currentHealth);
 
         if (audioSource != null && damageClip != null)
             audioSource.PlayOneShot(damageClip);
